@@ -63,10 +63,7 @@ var startGame = function() {
                 // if yes, take them to the store() function
                 if (storeConfirm) {
                     shop();
-                } else {
-                    // exiting game
-                    return;
-                }
+                } 
             }
         } else {
             window.alert("You have lost your robot in battle! Game Over!");
