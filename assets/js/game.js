@@ -1,31 +1,69 @@
+// function to generate a random numeric value
+var randomNumber = function(min, max) {
+    var value = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    return value;
+};
+
+var fightOrSkip = function() {
+    var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+
+    // Conditional Recursive Function Call
+    if (promptFight === "" || promptFight === null) {
+        window.alert("You need to provide a valid answer! Please try again.");
+        return fightOrSkip();
+    }
+    
+    promptFight = promptFight.toUpperCase();
+    // if player picks "skip" confirm and then stop the loop
+    if(promptFight === "SKIP") {
+        // confirm player wants to skip
+        var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+
+        // if yes (true), leave fight
+        if (confirmSkip) {
+            window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
+            // subtract money from playerMoney for skipping
+            playerInfo.playerMoney = Math.max(0, playerInfo.money - 10);
+           
+            return true;
+        }
+    }
+    return false;
+};
+
 var fight = function(enemy) {
     while (playerInfo.health > 0 && enemy.health > 0) {
-        var promptFight = window.prompt("Wou you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose.");
-        if (promptFight === "fight" || promptFight === "FIGHT") {
-            // generate random damage value based on player's attack power
-            var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack)
+        if (fightOrSkip) {
+            // if true, leave fight by breaking loop
+            break;
+        }
+ 
+        // generate random damage value based on player's attack power
+        var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack)
 
-            enemy.health = Math.max(0, enemy.health - damage);
-            console.log(playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + " now has " + enemy.health + " health remaining.");
-            if (enemy.health <= 0) {
-                window.alert(enemy.name + " has died!");
-                break;
-            } else {
-                window.alert(enemy.name + " still has " + enemy.health + " health left.");
+        enemy.health = Math.max(0, enemy.health - damage);
+        console.log(playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + " now has " + enemy.health + " health remaining.");
+        if (enemy.health <= 0) {
+            window.alert(enemy.name + " has died!");
+            break;
+        } else {
+            window.alert(enemy.name + " still has " + enemy.health + " health left.");
 
-            }
+        }
 
-            var damage = randomNumber(enemy.attack - 3, enemy.attack);
+        var damage = randomNumber(enemy.attack - 3, enemy.attack);
 
-            playerInfo.health = Math.max(0, playerInfo.health - damage);
-            console.log(enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + " now has " + playerInfo.health + " health remaining.");
-            if (playerInfo.health <= 0) {
-                window.alert(playerInfo.name + " has died!");
-                break;
-            } else {
-                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
-            }
-        } else if (promptFight === "skip" || promptFight === "SKIP") {
+        playerInfo.health = Math.max(0, playerInfo.health - damage);
+        console.log(enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + " now has " + playerInfo.health + " health remaining.");
+        if (playerInfo.health <= 0) {
+            window.alert(playerInfo.name + " has died!");
+            break;
+        } else {
+            window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+        }
+    
+      /* else if (promptFight === "SKIP") {
             var confirmSkip = window.confirm("Are you sure you'd like to quit?");
             // if yes (true), leave fight
             if (confirmSkip) {
@@ -41,21 +79,24 @@ var fight = function(enemy) {
         } else {
             window.alert("You need to choose a valid option. Try again!");
         }
+*/
     }
-}
+};
 
 // function to start a new game
 var startGame = function() {
     // reset player stats
     playerInfo.reset();
-
+    
     for (var i = 0; i < enemyInfo.length; i++) {
+        console.log(playerInfo);
         if (playerInfo.health > 0) {
             window.alert("Welcome to Robot Gladiators! Round " + (i + 1));
-            var pickedEnemyObj = enemyInfo[i];
-            pickedEnemyObj.health = randomNumber(40, 60);;
-            fight(pickedEnemyObj);
 
+            var pickedEnemyObj = enemyInfo[i];
+            pickedEnemyObj.health = randomNumber(40, 60);
+            console.log(pickedEnemyObj);
+            fight(pickedEnemyObj);
             //if we're not at the last enemy in the array
             if(playerInfo.health > 0 && i < enemyInfo.length - 1) {
                 var storeConfirm = window.confirm("The fight is over, visit the store before the next round?");
@@ -75,13 +116,6 @@ var startGame = function() {
     endGame();
 };
 
-// function to generate a random numeric value
-var randomNumber = function(min, max) {
-    var value = Math.floor(Math.random() * (max - min + 1)) + min;
-
-    return value;
-};
-
 // function to end the entire game
 var endGame = function() {
     // if player is still alive, player wins!
@@ -98,7 +132,7 @@ var endGame = function() {
     } else {
         window.alert("Thank you for playing Robot Gladiators! Come back soon!");
     }
-}
+};
 
 var shop = function() {
     // ask player what they'd like to do
@@ -132,12 +166,12 @@ var shop = function() {
 // function to set name
 var getPlayerName = function() {
     var name = "";
-
+    // name.trim() will prevent name that is all white spaces
     while (name === null || name.trim().length === 0) {
         name = prompt("What is your robot's name?");
     }
 
-}
+};
 
 var playerInfo = {
     name: getPlayerName(),
